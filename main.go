@@ -13,6 +13,22 @@ import (
 	"github.com/kataras/iris/v12/sessions"
 )
 
+// const (
+// 	Hostname = "172.26.49.50"
+// 	Port = "3306"
+// 	Username = "api_lg_list"
+// 	Password = "4HYAIQCMyYqyiO2"
+// 	Databasename = "logging_files"
+// )
+
+const (
+	Hostname = "127.0.0.1"
+	Port = "3306"
+	Username = "root"
+	Password = ""
+	Databasename = "go_lang"
+)
+
 func main() {
 	app := iris.New()
 	app.Logger().SetLevel("debug")
@@ -30,11 +46,20 @@ func main() {
 	})
 
 	// **** (MySQL)
-	db, err := database.ConnectSQL("127.0.0.1", "3306", "root", "", "go_lang")
+	db, err := database.ConnectSQL(Hostname, Port, Username, Password, Databasename)
 	if err != nil {
 		app.Logger().Fatalf("error while loading the tables: %v", err)
 		return
 	}
+
+	// close db
+	sqlDB, err := db.DB()
+	if err != nil {
+		app.Logger().Fatalf("can not close database: %v", err)
+		return
+	}
+	defer sqlDB.Close()
+
 	//for migrate
 	db.AutoMigrate(&models.Users{})
 

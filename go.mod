@@ -9,6 +9,7 @@ require (
 	github.com/etcd-io/bbolt v1.3.3 // indirect
 	github.com/flosch/pongo2/v4 v4.0.2 // indirect
 	github.com/gavv/httpexpect v2.0.0+incompatible // indirect
+	github.com/go-playground/validator/v10 v10.4.1 // indirect
 	github.com/gomodule/redigo v1.7.1-0.20190724094224-574c33c3df38 // indirect
 	github.com/google/uuid v1.2.0 // indirect
 	github.com/hashicorp/go-version v1.2.0 // indirect
@@ -28,6 +29,7 @@ require (
 	golang.org/x/sys v0.0.0-20210124154548-22da62e12c0c // indirect
 	golang.org/x/text v0.3.5 // indirect
 	golang.org/x/time v0.0.0-20201208040808-7e3f01d25324 // indirect
+	gopkg.in/validator.v2 v2.0.0-20200605151824-2b28d334fa05
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b // indirect
 	gorm.io/driver/mysql v1.0.4
 	gorm.io/gorm v1.20.12

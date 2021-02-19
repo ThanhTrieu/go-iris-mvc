@@ -1,12 +1,14 @@
 package controllers
 
 import (
+	"fmt"
 	"gomvc/services"
-
+	"gomvc/requests"
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/mvc"
 	"github.com/kataras/iris/v12/sessions"
 )
+
 
 type UsersController struct {
 	Ctx     iris.Context
@@ -32,11 +34,6 @@ func (c *UsersController) PostLogout() mvc.Result {
 	}
 }
 
-var loginUserStaticView = mvc.View{
-	Name: "users/login.html",
-	Data: iris.Map{"Title": "User login page"},
-}
-
 //http://localhost:8080/user/login
 func (c *UsersController) GetLogin() mvc.Result {
 	if c.isLoggedIn() {
@@ -44,8 +41,15 @@ func (c *UsersController) GetLogin() mvc.Result {
 			Path: "/admin/dashboard",
 		}
 	}
+	errs := c.Ctx.URLParam("state")
 
-	return loginUserStaticView
+	return mvc.View {
+		Name: "users/login.html",
+		Data: iris.Map{
+			"Title": "User login page",
+			"message": errs,
+		},
+	}
 }
 
 func (c *UsersController) PostLogin() mvc.Result {
@@ -58,7 +62,7 @@ func (c *UsersController) PostLogin() mvc.Result {
 
 	if check == false {
 		return mvc.Response{
-			Path: "/user/login",
+			Path: "/user/login?state=fail",
 		}
 	}
 
@@ -67,9 +71,47 @@ func (c *UsersController) PostLogin() mvc.Result {
 	c.Session.Set(userIDKey, u.Email)
 	c.Session.Set(userIDKey, u.AuthenKey)
 	c.Session.Set(userIDKey, u.Phone)
-	c.Session.Set(userIDKey, u.GroupId)
 
 	return mvc.Response{
 		Path: "/admin/dashboard",
+	}
+}
+
+func (c *UsersController) GetRegister() mvc.Result {
+	if c.isLoggedIn() {
+		return mvc.Response{
+			Path: "/admin/dashboard",
+		}
+	}
+
+	return mvc.View {
+		Name: "users/register.html",
+		Data: iris.Map{
+			"Title": "User register page",
+		},
+	}
+}
+
+func (c *UsersController) PostRegister() mvc.Result {
+	var (
+		username = c.Ctx.FormValue("username")
+		password = c.Ctx.FormValue("password")
+		email = c.Ctx.FormValue("email")
+		phone = c.Ctx.FormValue("phone")
+	)
+	msg := &requests.Message{
+		Username: username,
+		Password: password,
+		Phone:  phone,
+		Email:   email,
+	}
+	if msg.Validate() == false {
+		fmt.Println(msg.Errors)
+		return mvc.Response {
+			Path: "/user/register",
+		}
+	}
+	return mvc.Response{
+		Path: "/user/login",
 	}
 }

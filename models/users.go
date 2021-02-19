@@ -12,7 +12,6 @@ type Users struct {
 	Password   string `gorm:"size:60"`
 	Email      string `gorm:"size:60"`
 	Phone      string `gorm:"size:10"`
-	GroupId    int64
 	AuthenKey  string `gorm:"size:100"`
 	Fullname   string `gorm:"size:60"`
 	Address    string `gorm:"size:200"`

@@ -2,7 +2,18 @@
   <div class="row">
     <div class="col-12 col-sm-12 col-md-6 offset-md-3 col-lg-6 offset-lg-3 col-xl-6 offset-xl-3">
       <h1 class="text-center my-3">Register account</h1>
-      
+      {{ if .msg }}
+        <p class="text-danger">* {{ .msg.Email }}</p>
+        <p class="text-danger">* {{ .msg.Phone }}</p>
+        <p class="text-danger">* {{ .msg.Password }}</p>
+        <p class="text-danger">* {{ .msg.Username }}</p>
+      {{ end }}
+      {{ if .errUser }}
+        <p class="text-danger text-center"> {{ .errUser }}</p>
+      {{ end }}
+      {{ if .errEmail }}
+        <p class="text-danger text-center"> {{ .errEmail }}</p>
+      {{ end }}
       <form class="border p-3 mt-3" action="/user/register" method="POST" id="frmRegisterUser">
         <div class="mb-3">
           <label for="username" class="form-label">* Username</label>
@@ -24,7 +35,7 @@
         <button
           name="btnLogin"
           class="g-recaptcha btn btn-primary" 
-          data-sitekey="6LegKU8aAAAAAObhUDjwi7rCzAiWP9Jp8W4jDONS" 
+          data-sitekey={{ .siteKey }}
           data-callback='onSubmit' 
           data-action='submit'>Register</button>
         <p class="text-end"><a href="/user/login" style="text-decoration: none"> Login to the system ! </a></p>

@@ -8,6 +8,7 @@ import (
 
 type Users struct {
 	gorm.Model
+	ID         uint
 	Username   string `gorm:"size:60"`
 	Password   string `gorm:"size:60"`
 	Email      string `gorm:"size:60"`

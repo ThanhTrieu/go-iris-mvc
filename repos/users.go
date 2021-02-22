@@ -10,7 +10,9 @@ type UserRepository interface {
 	Select(query string) []models.Users
 	SelectById(query string, id int64) models.Users
 	SelectByName(query string, name string) models.Users
+	SelectByEmail(query string, email string) models.Users
 	LoginUser(query string, username string, password string) models.Users
+	CreateAccount(query string, username string, password string, email string, phone string) bool
 }
 
 type userMysqlRepository struct {
@@ -43,4 +45,18 @@ func (m *userMysqlRepository) SelectByName(query string, name string) models.Use
 	result := models.Users{}
 	m.DB.Raw(query, name).Scan(&result)
 	return result
+}
+
+func (m *userMysqlRepository) SelectByEmail(query string, email string) models.Users {
+	result := models.Users{}
+	m.DB.Raw(query, email).Scan(&result)
+	return result
+}
+
+func (m *userMysqlRepository) CreateAccount(query string, username string, password string, email string, phone string) bool {
+	tx := m.DB.Exec(query, username, password, email, phone)
+	if tx.Error != nil {
+    return false
+	}
+	return true
 }

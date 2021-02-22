@@ -21,8 +21,17 @@ func (c *DashboardController) getCurrentUserID() int64 {
 	return userID
 }
 
+func (c *DashboardController) getCurrentUsername() string {
+	username := c.Session.GetStringDefault("usernameSession", "")
+	return username
+}
+
 func (c *DashboardController) isLoggedIn() bool {
-	return c.getCurrentUserID() > 0
+	u := c.getCurrentUsername()
+	if u == "" {
+		return false
+	}
+	return true
 }
 
 var dashboardStaticView = mvc.View {

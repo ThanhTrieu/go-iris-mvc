@@ -6,8 +6,10 @@ import (
 	"gomvc/models"
 	"gomvc/repos"
 	"gomvc/services"
+	"os"
 	"time"
 
+	"github.com/joho/godotenv"
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/mvc"
 	"github.com/kataras/iris/v12/sessions"
@@ -21,17 +23,21 @@ import (
 // 	Databasename = "logging_files"
 // )
 
-const (
-	Hostname = "127.0.0.1"
-	Port = "3306"
-	Username = "root"
-	Password = ""
-	Databasename = "go_lang"
-)
+// const (
+// 	Hostname = "127.0.0.1"
+// 	Port = "3306"
+// 	Username = "root"
+// 	Password = ""
+// 	Databasename = "go_lang"
+// )
 
 func main() {
 	app := iris.New()
 	app.Logger().SetLevel("debug")
+	errEnv := godotenv.Load()
+	if errEnv != nil {
+    app.Logger().Fatalf("Error loading .env file: %v", errEnv)
+  }
 
 	//masterpage
 	tmpl := iris.HTML("./templates", ".html").Layout("masterpage.html").Reload(true)
@@ -46,7 +52,13 @@ func main() {
 	})
 
 	// **** (MySQL)
-	db, err := database.ConnectSQL(Hostname, Port, Username, Password, Databasename)
+	db, err := database.ConnectSQL(
+		os.Getenv("DB_HOST_NAME"),
+		os.Getenv("DB_PORT"),
+		os.Getenv("DB_USERNAME"),
+		os.Getenv("DB_PASSWORD"),
+		os.Getenv("DB_NAME"))
+
 	if err != nil {
 		app.Logger().Fatalf("error while loading the tables: %v", err)
 		return
@@ -61,7 +73,7 @@ func main() {
 	defer sqlDB.Close()
 
 	//for migrate
-	db.AutoMigrate(&models.Users{})
+	db.AutoMigrate(&models.Users{}, &models.Groups{})
 
 	// session
 	sessManager := sessions.New(sessions.Config{

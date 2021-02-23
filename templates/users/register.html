@@ -1,3 +1,4 @@
+{{ define "users/register-register" }}
 <div class="container">
   <div class="row">
     <div class="col-12 col-sm-12 col-md-6 offset-md-3 col-lg-6 offset-lg-3 col-xl-6 offset-xl-3">
@@ -37,14 +38,18 @@
           class="g-recaptcha btn btn-primary" 
           data-sitekey={{ .siteKey }}
           data-callback='onSubmit' 
-          data-action='submit'>Register</button>
-        <p class="text-end"><a href="/user/login" style="text-decoration: none"> Login to the system ! </a></p>
+          data-action='submit'><i class="fas fa-user-circle"></i> Register</button>
+        <p class="text-right"><a href="/user/login" style="text-decoration: none"> Login to the system ! </a></p>
       </form>
     </div>
   </div>
 </div>
+{{ end }}
+
+{{ define "users/register-javascripts" }}
 <script>
   function onSubmit(token) {
     document.getElementById("frmRegisterUser").submit();
   }
 </script>
+{{ end }}

@@ -1,3 +1,4 @@
+{{ define "users/login-login" }}
 <div class="container">
   <div class="row">
     <div class="col-12 col-sm-12 col-md-6 offset-md-3 col-lg-6 offset-lg-3 col-xl-6 offset-xl-3">
@@ -22,15 +23,19 @@
           data-sitekey={{ .siteKey }} 
           data-callback='onSubmit' 
           data-action='submit'
-        >Login</button>
+        > <i class="fas fa-sign-in-alt"></i> Login</button>
         <!-- <a href="/user/register" style="text-decoration: none"> Forget password</a> -->
-        <p class="text-end"><a href="/user/register" style="text-decoration: none"> Sign up for an account ! </a></p>
+        <p class="text-right"><a href="/user/register" style="text-decoration: none"> Sign up for an account ! </a></p>
       </form>
     </div>
   </div>
 </div>
+{{ end }}
+
+{{ define "users/login-javascripts" }}
 <script>
   function onSubmit(token) {
     document.getElementById("frmLoginUser").submit();
   }
 </script>
+{{ end }}

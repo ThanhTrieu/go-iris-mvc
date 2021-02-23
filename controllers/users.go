@@ -60,6 +60,7 @@ func (c *UsersController) GetLogin() mvc.Result {
 			"Title": "User login page",
 			"message": errs,
 			"siteKey": dataSiteKey,
+			"layout": false,
 		},
 	}
 }
@@ -113,6 +114,7 @@ func (c *UsersController) GetRegister() mvc.Result {
 			"errUser": errUser,
 			"errEmail": errEmail,
 			"siteKey": dataSiteKey,
+			"layout": false,
 		},
 	}
 }

@@ -28,7 +28,8 @@ func (c *DashboardController) getCurrentUsername() string {
 
 func (c *DashboardController) isLoggedIn() bool {
 	u := c.getCurrentUsername()
-	if u == "" {
+	id := c.getCurrentUserID()
+	if u == "" || id <= 0 {
 		return false
 	}
 	return true
@@ -36,7 +37,10 @@ func (c *DashboardController) isLoggedIn() bool {
 
 var dashboardStaticView = mvc.View {
 	Name: "dashboard/index.html",
-	Data: iris.Map{"Title": "Dashboard page"},
+	Data: iris.Map{
+		"Title": "Dashboard page",
+		"layout": true,
+	},
 }
 var LoginStaticPath =  mvc.Response { 
 	Path: "/user/login",

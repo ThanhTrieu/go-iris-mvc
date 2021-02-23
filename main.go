@@ -15,21 +15,11 @@ import (
 	"github.com/kataras/iris/v12/sessions"
 )
 
-// const (
-// 	Hostname = "172.26.49.50"
-// 	Port = "3306"
-// 	Username = "api_lg_list"
-// 	Password = "4HYAIQCMyYqyiO2"
-// 	Databasename = "logging_files"
-// )
-
-// const (
-// 	Hostname = "127.0.0.1"
-// 	Port = "3306"
-// 	Username = "root"
-// 	Password = ""
-// 	Databasename = "go_lang"
-// )
+func setSessionViewData(ctx iris.Context) {
+	session := sessions.Get(ctx)
+	ctx.ViewData("session", session)
+	ctx.Next()
+}
 
 func main() {
 	app := iris.New()
@@ -80,6 +70,9 @@ func main() {
 		Cookie:  "IueBm5pJGVe5dzsQ",
 		Expires: 24 * time.Hour,
 	})
+	// using session in view
+	app.Use(sessManager.Handler())
+	app.Use(setSessionViewData)
 
 	//for user
 	userRepo := repos.NewUserRepository(db)

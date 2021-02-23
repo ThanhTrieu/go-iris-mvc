@@ -31,7 +31,8 @@ func (c *UsersController) getCurrentUsername() string {
 
 func (c *UsersController) isLoggedIn() bool {
 	u := c.getCurrentUsername()
-	if u == "" {
+	id := c.getCurrentUserID()
+	if u == "" || id <= 0 {
 		return false
 	}
 	return true

@@ -36,11 +36,6 @@ func main() {
 	//static files
 	app.HandleDir("/static", iris.Dir("./public/static"))
 
-	//routes
-	app.Get("/", func(ctx iris.Context) {
-		ctx.Writef("Hello world")
-	})
-
 	// **** (MySQL)
 	db, err := database.ConnectSQL(
 		os.Getenv("DB_HOST_NAME"),
@@ -55,9 +50,9 @@ func main() {
 	}
 
 	// close db
-	sqlDB, err := db.DB()
-	if err != nil {
-		app.Logger().Fatalf("can not close database: %v", err)
+	sqlDB, errDb := db.DB()
+	if errDb != nil {
+		app.Logger().Fatalf("can not close database: %v", errDb)
 		return
 	}
 	defer sqlDB.Close()

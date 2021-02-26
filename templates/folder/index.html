@@ -1,0 +1,33 @@
+<div class="row">
+  <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+    <h1 class="text-center mt-0 pt-0"> list your folder</h1>
+    <div class="table-responsive">
+      <table class="table mb-0 table-striped table-hover">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Telegram</th>
+            <th>Folders</th>
+            <th class="text-center">Member</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{ range .listFolder }}
+          <tr>
+            <td>{{ .ID }}</td>
+            <td>{{ .LeaderName }}</td>
+            <td>{{ .LeaderEmail }}</td>
+            <td>{{ .LeaderTelegram }}</td>
+            <td><strong><i>{{ .FloderName }}</i></strong></td>
+            <td class="text-center vertical">
+              <a href="/admin/memberfolder?leader_id={{ .ID }}&group_id={{ .GroupId }}"><i class="align-middle" data-feather="user"></i></a>
+            </td>
+          </tr>
+          {{ end }}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

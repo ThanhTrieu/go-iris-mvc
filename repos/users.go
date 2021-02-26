@@ -12,7 +12,7 @@ type UserRepository interface {
 	SelectByName(query string, name string) models.Users
 	SelectByEmail(query string, email string) models.Users
 	LoginUser(query string, username string, password string) models.Users
-	CreateAccount(query string, username string, password string, email string, phone string) bool
+	CreateAccount(query string, username string, password string, email string, phone string, role int) bool
 }
 
 type userMysqlRepository struct {
@@ -53,8 +53,8 @@ func (m *userMysqlRepository) SelectByEmail(query string, email string) models.U
 	return result
 }
 
-func (m *userMysqlRepository) CreateAccount(query string, username string, password string, email string, phone string) bool {
-	tx := m.DB.Exec(query, username, password, email, phone)
+func (m *userMysqlRepository) CreateAccount(query string, username string, password string, email string, phone string, role int) bool {
+	tx := m.DB.Exec(query, username, password, email, phone, role)
 	if tx.Error != nil {
     return false
 	}

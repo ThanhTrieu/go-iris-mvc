@@ -58,7 +58,7 @@ func main() {
 	defer sqlDB.Close()
 
 	//for migrate
-	db.AutoMigrate(&models.Users{}, &models.Groups{})
+	db.AutoMigrate(&models.Users{}, &models.Groups{}, &models.LeaderFolders{}, &models.MemberFolder{})
 
 	// session
 	sessManager := sessions.New(sessions.Config{
@@ -69,6 +69,17 @@ func main() {
 	app.Use(sessManager.Handler())
 	app.Use(setSessionViewData)
 
+	// csrf token
+	/*
+	CSRF := csrf.Protect(
+		// Note that the authentication key
+		// provided should be 32 bytes
+		// long and persist across application restarts.
+		[]byte("9AB0F421E53A477C084477AEA06096F5"),
+		// WARNING: Set it to true on production with HTTPS.
+		csrf.Secure(false),
+	)
+	*/
 	//for user
 	userRepo := repos.NewUserRepository(db)
 	userService := services.NewUserService(userRepo)
@@ -77,11 +88,12 @@ func main() {
 		userService,
 		sessManager.Start,
 	)
+	// users.Use(CSRF)
 	users.Handle(new(controllers.UsersController))
 
 	// for dashboard
-	dashboardRepo := repos.NewUserRepository(db)
-	dashboardService := services.NewUserService(dashboardRepo)
+	dashboardRepo := repos.NewGroupRepository(db)
+	dashboardService := services.NewGroupService(dashboardRepo)
 
 	dashboards := mvc.New(app.Party("/admin"))
 	dashboards.Register(
@@ -89,6 +101,29 @@ func main() {
 		sessManager.Start,
 	)
 	dashboards.Handle(new(controllers.DashboardController))
+
+	// for create folder leader and member
+	leaderFolderRepo := repos.NewLeaderFolderRepository(db)
+	leaderFolderService := services.NewLeaderFoldersService(leaderFolderRepo)
+
+	memberFolderRepo := repos.NewMemberFolderRepository(db)
+	memberFolderService := services.NewMemberFoldersService(memberFolderRepo)
+
+	groupRepo := repos.NewGroupRepository(db)
+	groupService := services.NewGroupService(groupRepo)
+
+	fileListFolderRepo := repos.NewFileListFolderRepository(db)
+	fileListFolderService := services.NewFileListFoldersService(fileListFolderRepo)
+
+	createFolder := mvc.New(app.Party("/admin"))
+	createFolder.Register(
+		groupService,
+		leaderFolderService,
+		memberFolderService,
+		fileListFolderService,
+		sessManager.Start,
+	)
+	createFolder.Handle(new(controllers.FolderController))
 
 	//error
 	app.OnAnyErrorCode(func(ctx iris.Context) {

@@ -109,6 +109,8 @@ github.com/google/uuid v1.2.0 h1:qJYtXnJRWmpe7m/3XlyhrsLrEURqHRM2kxzoxXqyUDs=
 github.com/google/uuid v1.2.0/go.mod h1:TIyPZe4MgqvfeYDBFedMoGGpEw/LqOeaOT+nhxU+yHo=
 github.com/gorilla/css v1.0.0 h1:BQqNyPTi50JCFMTw/b67hByjMVXZRwGha6wxVGkeihY=
 github.com/gorilla/css v1.0.0/go.mod h1:Dn721qIggHpt4+EFCcTLTU/vk5ySda2ReITrtgBl60c=
+github.com/gorilla/securecookie v1.1.1 h1:miw7JPhV+b/lAHSXz4qd/nN9jRiAFV5FwjeKyCS8BvQ=
+github.com/gorilla/securecookie v1.1.1/go.mod h1:ra0sb63/xPlUeL+yeDciTfxMRAA+MP+HVt/4epWDjd4=
 github.com/gorilla/websocket v1.4.1 h1:q7AeDBpnBk8AogcD4DSag/Ukw/KV+YhzLj2bP5HvKCM=
 github.com/gorilla/websocket v1.4.1/go.mod h1:YR8l580nyteQvAITg2hZ9XVh4b55+EU/adAjf1fMHhE=
 github.com/gorilla/websocket v1.4.2 h1:+/TMaTYc4QFitKJxsQ7Yye35DkWvkdLcvGKqM+x0Ufc=
@@ -127,6 +129,9 @@ github.com/iris-contrib/jade v1.1.3 h1:p7J/50I0cjo0wq/VWVCDFd8taPJbuFC+bq23SniRF
 github.com/iris-contrib/jade v1.1.3/go.mod h1:H/geBymxJhShH5kecoiOCSssPX7QWYH7UaeZTSWddIk=
 github.com/iris-contrib/jade v1.1.4 h1:WoYdfyJFfZIUgqNAeOyRfTNQZOksSlZ6+FnXR3AEpX0=
 github.com/iris-contrib/jade v1.1.4/go.mod h1:EDqR+ur9piDl6DUgs6qRrlfzmlx/D5UybogqrXvJTBE=
+github.com/iris-contrib/middleware v12.1.3-0.20210110101738-6d0a4d799b5d+incompatible h1:G3OVw3wD9XuE84yc+62puEEoAEi/FMy6bWCqwNM55Bo=
+github.com/iris-contrib/middleware/csrf v0.0.0-20210110101738-6d0a4d799b5d h1:2k1Rl7HlHzW3Mtb9QoVXVE4hGYJNZJPLWEpvoVzO6Vg=
+github.com/iris-contrib/middleware/csrf v0.0.0-20210110101738-6d0a4d799b5d/go.mod h1:Ty6+MfBxjc5JhWAKvSbG1I364sVpz0nj1qX4xIFMUlY=
 github.com/iris-contrib/pongo2 v0.0.1 h1:zGP7pW51oi5eQZMIlGA3I+FHY9/HOQWDB+572yin0to=
 github.com/iris-contrib/pongo2 v0.0.1/go.mod h1:Ssh+00+3GAZqSQb30AvBRNxBx7rf0GqwkjqxNd0u65g=
 github.com/iris-contrib/schema v0.0.1 h1:10g/WnoRR+U+XXHWKBHeNy/+tZmM2kcAVGLOsz+yaDA=
@@ -153,6 +158,7 @@ github.com/kataras/golog v0.1.6/go.mod h1:jOSQ+C5fUqsNSwurB/oAHq1IFSb0KI3l6GMa7x
 github.com/kataras/iris v0.0.2 h1:Tteb6pXLN9QiXvTCXCP31LRHu1LHlVA6Rappr9vWa1c=
 github.com/kataras/iris/v12 v12.1.8 h1:O3gJasjm7ZxpxwTH8tApZsvf274scSGQAUpNe47c37U=
 github.com/kataras/iris/v12 v12.1.8/go.mod h1:LMYy4VlP67TQ3Zgriz8RE2h2kMZV2SgMYbq3UhfoFmE=
+github.com/kataras/iris/v12 v12.2.0-alpha2/go.mod h1:5ibgjbO4kCekMqLCs/yWid7Dr9DRXJVDasAk1xZ8kJg=
 github.com/kataras/iris/v12 v12.2.0-alpha2.0.20210127025153-61f04ee4ff51 h1:ljsDnNVHvdYNUJjuGXKvN0ZGjXEoKo1xH5IW3pXC0Sk=
 github.com/kataras/iris/v12 v12.2.0-alpha2.0.20210127025153-61f04ee4ff51/go.mod h1:5ibgjbO4kCekMqLCs/yWid7Dr9DRXJVDasAk1xZ8kJg=
 github.com/kataras/jwt v0.0.9/go.mod h1:4ss3aGJi58q3YGmhLUiOvNJnL7UlTXD7+Wf+skgsTmQ=

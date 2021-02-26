@@ -14,6 +14,7 @@ require (
 	github.com/google/uuid v1.2.0 // indirect
 	github.com/hashicorp/go-version v1.2.0 // indirect
 	github.com/iris-contrib/blackfriday v2.0.0+incompatible // indirect
+	github.com/iris-contrib/middleware/csrf v0.0.0-20210110101738-6d0a4d799b5d // indirect
 	github.com/iris-contrib/pongo2 v0.0.1 // indirect
 	github.com/joho/godotenv v1.3.0
 	github.com/kataras/iris/v12 v12.2.0-alpha2.0.20210127025153-61f04ee4ff51

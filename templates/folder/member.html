@@ -1,0 +1,33 @@
+<div class="row">
+  <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+    <h1 class="text-center">List members of leader</h1>
+    <p>Name of leader : <b>{{ .infoLeader.LeaderName }}</b></p>
+    <p>Email of leader: <b>{{ .infoLeader.LeaderEmail }}</b></p>
+    <p>Telegram of leader: <b>{{ .infoLeader.LeaderTelegram }}</b></p>
+    <p>Group: <b>{{ .infoGroup.GroupName }}</b></p>
+    
+    <a class="btn btn-primary" href="/admin/listfolder"> list folders of leader</a>
+    <table class="table mb-0 table-striped table-hover">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Telegram</th>
+          <th>Folders</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{ range .listMember }}
+        <tr>
+          <td>{{ .ID }}</td>
+          <td>{{ .MemberName }}</td>
+          <td>{{ .MemberEmail }}</td>
+          <td>{{ .MemberTelegram }}</td>
+          <td><strong><i>{{ .MemberFolder }}</i></strong></td>
+        </tr>
+        {{ end }}
+      </tbody>
+    </table>
+  </div>
+</div>

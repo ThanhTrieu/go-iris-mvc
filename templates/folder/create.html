@@ -1,0 +1,203 @@
+{{ define "folder/create-stylesheets" }}
+<link rel="stylesheet" type="text/css" href="/static/css/selectize.default.css" />
+<style>
+  #frmCreatFolder label.error{
+    color:red;
+    font-weight: bold;
+    font-style: italic;
+ } 
+</style>
+{{ end }}
+<div class="row">
+  <h1 class="text-center mt-0 pt-0"> Team leader create folder !</h1>
+  <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 mb-2">
+    <a class="btn btn-primary mb-2" href="/admin/listfolder">List your folder</a>
+    {{ if .msg }}
+    <p class="text-danger">* {{ .msg.LeaderName }}</p>
+    <p class="text-danger">* {{ .msg.LeaderEmail }}</p>
+    <p class="text-danger">* {{ .msg.LeaderTelegram }}</p>
+    <p class="text-danger">* {{ .msg.GroupId }}</p>
+    <p class="text-danger">* {{ .msg.LeaderFolder }}</p>
+  {{ end }}
+  {{ if .msgMember }}
+    <p class="text-danger">* {{ .msgMember.MemberName }}</p>
+    <p class="text-danger">* {{ .msgMember.MemberEmail }}</p>
+    <p class="text-danger">* {{ .msgMember.MemberTelegram }}</p>
+    <p class="text-danger">* {{ .msgMember.MemberFolder }}</p>
+  {{ end }}
+    {{ if eq .state "error" }}
+      <div class="alert alert-danger alert-dismissible" role="alert">
+        <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close"></button>
+        <div class="alert-message">
+          <strong>An Error occurred, </strong> please try again!
+        </div>
+      </div>
+    {{ end }}
+  </div>
+  <form method="post" action="/admin/folder" enctype="multipart/form-data" id="frmCreatFolder">
+    <div class="row border">
+      <div class="col-12 col-sm-12 p-3">
+        <div class="form-group">
+          <label for="leaderName">(*) Name of leader</label>
+          <input class="form-control" id="leaderName" name="leaderName" />
+        </div>
+        <div class="form-group mt-3">
+          <label for="leaderEmail">(*) Email of leader</label>
+          <input class="form-control" id="leaderEmail" name="leaderEmail" />
+        </div>
+        <div class="form-group mt-3">
+          <label for="leaderTelegram">(*) Telegram of leader</label>
+          <input class="form-control" id="leaderTelegram" name="leaderTelegram" />
+        </div>
+        <div class="form-group mt-3">
+          <label for="leaderGroup">(*) Group</label>
+          <select id="leaderGroup" name="leaderGroup">
+            <option value=""> --- choose ---</option>
+            {{ range .groups}}
+              <option value="{{ .ID }}"> {{ .GroupName }} </option>
+            {{ end }}
+          </select>
+        </div>
+        <div class="form-group mt-3">
+          <label for="leaderFolderName">(*) Folder name</label>
+          <select id="leaderFolderName" name="leaderFolderName" multiple placeholder="Select a folder...">
+            {{ range .allFolder}}
+              <option value="{{ .FolderName }}"> {{ .FolderName }} </option>
+            {{ end }}
+          </select>
+          <span style="display: none;" id="leaderFolderName" class="error" for="leaderFolderName">Please enter your folder name</span>
+        </div>
+      </div>
+    </div>
+    <h4 class="text-left mt-3 btn btn-success">
+      <label for="assignsMember" class="pointer">leader assigns the responsibility !</label>
+      <input type="checkbox" id="assignsMember" name="assignsMember" />
+    </h4>
+    <div class="row border" style="display: none" id="infoMembers">
+      <div class="col-12 col-sm-12 p-3">
+          <div class="form-group">
+            <label for="memberName">(*) Name of member</label>
+            <input class="form-control" id="memberName" name="memberName" />
+          </div>
+          <div class="form-group mt-3">
+            <label for="memberEmail">(*) Email of member</label>
+            <input class="form-control" id="memberEmail" name="memberEmail" />
+          </div>
+          <div class="form-group mt-3">
+            <label for="memberTelegram">(*) Telegram of member</label>
+            <input class="form-control" id="memberTelegram" name="memberTelegram" />
+          </div>
+          <div class="form-group mt-3">
+            <label for="memberFolderName">(*) Folder name</label>
+            <select id="memberFolderName" name="memberFolderName" multiple placeholder="Select a folder...">
+              {{ range .allFolder}}
+                <option value="{{ .FolderName }}"> {{ .FolderName }} </option>
+              {{ end }}
+            </select>
+          </div>
+      </div>
+    </div>
+    <button type="button" id="btnCreateFolder" name="btnCreateFolder" class="btn btn-primary btn-block mt-3"> Submit </button>
+    <input type="hidden" id="hddLeaderFolderName" name="hddLeaderFolderName">
+    <input type="hidden" id="hddMemberFolderName" name="hddMemberFolderName">
+  </form>
+</div>
+{{ define "folder/create-javascripts" }}
+<script type="text/javascript" src="/static/js/selectize.js"></script>
+<script type="text/javascript" src="/static/js/style-selectize.js"></script>
+<script type="text/javascript" src="/static/js/jquery.validate.min.js"></script>
+<script type="text/javascript">
+  $(function() {
+    $('#leaderGroup').selectize();
+    $('#leaderFolderName').selectize({
+      maxItems: 30
+    });
+    $('#memberFolderName').selectize({
+      maxItems: 30
+    });
+    $('#assignsMember').click(function(){
+      $('#infoMembers').slideToggle('slow');
+    });
+    $('#btnCreateFolder').click(function(){
+      let leaderFolderName = $.trim($('#leaderFolderName').val());
+      let strLeaderFolder = leaderFolderName.split(",");
+      $('#hddLeaderFolderName').val(strLeaderFolder);
+
+      if(!$('#assignsMember').is(':checked')){
+        $("#frmCreatFolder").validate({
+          ignore: ":hidden:not([class~=selectized]),:hidden > .selectized, .selectize-control .selectize-input input",
+          rules: {
+            leaderName: "required",
+            leaderEmail: {
+              required: true,
+              email: true
+            },
+            leaderTelegram: "required",
+            leaderGroup:{
+              required: true,
+              number: true
+            },
+            leaderFolderName: "required"
+          },
+          messages: {
+            leaderName: "Please enter your name",
+            leaderEmail: {
+              required: "Please enter your email"
+            },
+            leaderGroup: {
+              required: "Please enter your group"
+            },
+            leaderTelegram: "Please enter your telegram",
+            leaderFolderName: "Please enter your folder name"
+          }
+        });
+      } else {
+        let memberFolderName = $.trim($('#memberFolderName').val());
+        let strMemberFolder = memberFolderName.split(",");
+        $('#hddMemberFolderName').val(strMemberFolder);
+
+        $("#frmCreatFolder").validate({
+          ignore: ":hidden:not([class~=selectized]),:hidden > .selectized, .selectize-control .selectize-input input",
+          rules: {
+            leaderName: "required",
+            leaderEmail: {
+              required: true,
+              email: true
+            },
+            leaderTelegram: "required",
+            leaderGroup:{
+              required: true,
+              number: true
+            },
+            leaderFolderName: "required",
+            memberName: "required",
+            memberEmail: {
+              required: true,
+              email: true
+            },
+            memberTelegram: "required",
+            memberGroup:{
+              required: true,
+              number: true
+            },
+            memberFolderName: "required",
+          },
+          messages: {
+            leaderName: "Please enter your name",
+            leaderEmail: {
+              required: "Please enter your email"
+            },
+            leaderGroup: {
+              required: "Please enter your group"
+            },
+            leaderTelegram: "Please enter your telegram",
+            leaderFolderName: "Please enter your folder name"
+          }
+        });
+      }
+      $('#frmCreatFolder').submit();
+      return false;
+    })
+  });
+</script>
+{{ end }}

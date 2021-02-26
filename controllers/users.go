@@ -85,6 +85,7 @@ func (c *UsersController) PostLogin() mvc.Result {
 	c.Session.Set("emailSession", u.Email)
 	c.Session.Set("authenSession", u.AuthenKey)
 	c.Session.Set("phoneSession", u.Phone)
+	c.Session.Set("roleSession", int64(u.Role))
 
 	return mvc.Response{
 		Path: "/admin/dashboard",
@@ -104,7 +105,7 @@ func (c *UsersController) GetRegister() mvc.Result {
 
 	state := c.Ctx.URLParam("state")
 	if state != "fail" || state != "error_user" || state != "error_email" {
-		c.Session.Destroy()
+		c.Session.Delete("ErrorsRegister")
 	} 
 
 	return mvc.View {
@@ -126,6 +127,7 @@ func (c *UsersController) PostRegister() mvc.Result {
 		password = html.EscapeString(c.Ctx.FormValue("password"))
 		email = html.EscapeString(c.Ctx.FormValue("email"))
 		phone = html.EscapeString(c.Ctx.FormValue("phone"))
+		roleUser = 3
 	)
 	msg := &requests.Message{
 		Username: username,
@@ -133,6 +135,7 @@ func (c *UsersController) PostRegister() mvc.Result {
 		Phone:  phone,
 		Email:   email,
 	}
+
 	if msg.Validate() == false {
 		c.Session.Set("ErrorsRegister", msg.Errors)
 		return mvc.Response {
@@ -156,7 +159,7 @@ func (c *UsersController) PostRegister() mvc.Result {
 	}
 
 	c.Session.Destroy()
-	insert := c.Service.CreateUser(username, password, email, phone)
+	insert := c.Service.CreateUser(username, password, email, phone, roleUser)
 	if insert == false {
 		return mvc.Response {
 			Path: "/user/register?state=error",

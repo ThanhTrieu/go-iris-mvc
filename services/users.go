@@ -15,7 +15,7 @@ type UsersService interface {
 	CheckLoginUser(username string, password string) (models.Users, bool)
 
 
-	CreateUser(username string, password string, email string, phone string)  bool
+	CreateUser(username string, password string, email string, phone string, role int)  bool
 }
 
 type usersService struct {
@@ -77,8 +77,7 @@ func (s *usersService) CheckEmailExists(email string) bool  {
 	return true
 }
 
-func (s *usersService) CreateUser(username string, password string, email string, phone string) bool {
-	// return s.repo.CreateAccount("INSERT INTO users(username, password, email, phone, authen_key, fullname, address, brirthday, status, gender, last_login, created_at, updated_at, deleted_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)", username, password, email, phone, "", "", "", "", 1, 1, "", "", "", "")
-	return s.repo.CreateAccount("INSERT INTO users(username, password, email, phone) VALUES(?,?,?,?)", username, password, email, phone)
+func (s *usersService) CreateUser(username string, password string, email string, phone string, role int) bool {
+	return s.repo.CreateAccount("INSERT INTO users(username, password, email, phone, role) VALUES(?,?,?,?,?)", username, password, email, phone, role)
 }
 

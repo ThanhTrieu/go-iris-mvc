@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"gomvc/helpers"
 	"gomvc/requests"
 	"gomvc/services"
 	"html"
@@ -11,31 +12,10 @@ import (
 	"github.com/kataras/iris/v12/sessions"
 )
 
-const userIDKey = "BACKEND_LOGGING_1990"
-
 type UsersController struct {
 	Ctx     iris.Context
 	Service services.UsersService
 	Session *sessions.Session
-}
-
-func (c *UsersController) getCurrentUserID() int64 {
-	userID := c.Session.GetInt64Default(userIDKey, 0)
-	return userID
-}
-
-func (c *UsersController) getCurrentUsername() string {
-	username := c.Session.GetStringDefault("usernameSession", "")
-	return username
-}
-
-func (c *UsersController) isLoggedIn() bool {
-	u := c.getCurrentUsername()
-	id := c.getCurrentUserID()
-	if u == "" || id <= 0 {
-		return false
-	}
-	return true
 }
 
 func (c *UsersController) PostLogout() mvc.Result {
@@ -47,7 +27,7 @@ func (c *UsersController) PostLogout() mvc.Result {
 
 //http://localhost:8080/user/login
 func (c *UsersController) GetLogin() mvc.Result {
-	if c.isLoggedIn() {
+	if helpers.IsLoggedIn(c.Ctx) {
 		return mvc.Response{
 			Path: "/admin/dashboard",
 		}
@@ -68,11 +48,11 @@ func (c *UsersController) GetLogin() mvc.Result {
 
 func (c *UsersController) PostLogin() mvc.Result {
 	var (
-		username = c.Ctx.FormValue("username")
-		password = c.Ctx.FormValue("password")
+		username = html.EscapeString(c.Ctx.FormValue("username"))
+		password = html.EscapeString(c.Ctx.FormValue("password"))
 	)
-
-	u, check := c.Service.CheckLoginUser(username, password)
+	cryptPassword := helpers.GetMD5Hash(password)
+	u, check := c.Service.CheckLoginUser(username, cryptPassword)
 
 	if check == false {
 		return mvc.Response{
@@ -80,7 +60,7 @@ func (c *UsersController) PostLogin() mvc.Result {
 		}
 	}
 	
-	c.Session.Set(userIDKey, int64(u.ID))
+	c.Session.Set("idUserSession", int64(u.ID))
 	c.Session.Set("usernameSession", u.Username)
 	c.Session.Set("emailSession", u.Email)
 	c.Session.Set("authenSession", u.AuthenKey)
@@ -93,7 +73,7 @@ func (c *UsersController) PostLogin() mvc.Result {
 }
 
 func (c *UsersController) GetRegister() mvc.Result {
-	if c.isLoggedIn() {
+	if helpers.IsLoggedIn(c.Ctx) {
 		return mvc.Response{
 			Path: "/admin/dashboard",
 		}
@@ -117,6 +97,7 @@ func (c *UsersController) GetRegister() mvc.Result {
 			"errEmail": errEmail,
 			"siteKey": dataSiteKey,
 			"layout": false,
+			"state": state,
 		},
 	}
 }
@@ -159,7 +140,9 @@ func (c *UsersController) PostRegister() mvc.Result {
 	}
 
 	c.Session.Destroy()
-	insert := c.Service.CreateUser(username, password, email, phone, roleUser)
+	// crypt password md5
+	cryptPassword := helpers.GetMD5Hash(password)
+	insert := c.Service.CreateUser(username, cryptPassword, email, phone, roleUser)
 	if insert == false {
 		return mvc.Response {
 			Path: "/user/register?state=error",

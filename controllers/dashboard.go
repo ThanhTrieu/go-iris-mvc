@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"gomvc/helpers"
 	"gomvc/services"
 
 	"github.com/kataras/iris/v12"
@@ -12,27 +13,6 @@ type DashboardController struct {
 	Ctx     iris.Context
 	Service services.UsersService
 	Session *sessions.Session
-}
-
-const IDKey = "BACKEND_LOGGING_1990"
-
-func (c *DashboardController) getCurrentUserID() int64 {
-	userID := c.Session.GetInt64Default(IDKey, 0)
-	return userID
-}
-
-func (c *DashboardController) getCurrentUsername() string {
-	username := c.Session.GetStringDefault("usernameSession", "")
-	return username
-}
-
-func (c *DashboardController) isLoggedIn() bool {
-	u := c.getCurrentUsername()
-	id := c.getCurrentUserID()
-	if u == "" || id <= 0 {
-		return false
-	}
-	return true
 }
 
 var dashboardStaticView = mvc.View {
@@ -47,7 +27,7 @@ var LoginStaticPath =  mvc.Response {
 }
 
 func (c *DashboardController) GetDashboard() mvc.Result {
-	if c.isLoggedIn() {
+	if helpers.IsLoggedIn(c.Ctx) {
 		return dashboardStaticView
 	}
 	return LoginStaticPath

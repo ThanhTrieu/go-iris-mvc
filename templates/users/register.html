@@ -12,6 +12,9 @@
       {{ if .errUser }}
         <p class="text-danger text-center"> {{ .errUser }}</p>
       {{ end }}
+      {{ if eq .state "error" }}
+        <p class="text-danger text-center"> An error occurred, please try again </p>
+      {{ end }}
       {{ if .errEmail }}
         <p class="text-danger text-center"> {{ .errEmail }}</p>
       {{ end }}

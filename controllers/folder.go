@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"gomvc/helpers"
 	"gomvc/models"
 	"gomvc/requests"
 	"gomvc/services"
@@ -21,40 +22,14 @@ type FolderController struct {
 	Session *sessions.Session
 }
 
-const IDSessionKey = "BACKEND_LOGGING_1990"
-
-func (c *FolderController) getCurrentUserID() int64 {
-	userID := c.Session.GetInt64Default(IDSessionKey, 0)
-	return userID
-}
-
-func (c *FolderController) getCurrentUserRole() int64 {
-	userRole := c.Session.GetInt64Default("roleSession", 3)
-	return userRole
-}
-
-func (c *FolderController) getCurrentUsername() string {
-	username := c.Session.GetStringDefault("usernameSession", "")
-	return username
-}
-
-func (c *FolderController) isLoggedIn() bool {
-	u := c.getCurrentUsername()
-	id := c.getCurrentUserID()
-	if u == "" || id <= 0 {
-		return false
-	}
-	return true
-}
-
 var LoginStaticPathView =  mvc.Response { 
 	Path: "/user/login",
 }
 
 func (c *FolderController) GetListfolder() mvc.Result  {
-	if c.isLoggedIn() {
-		roleUser := c.getCurrentUserRole()
-		userID := c.getCurrentUserID()
+	if helpers.IsLoggedIn(c.Ctx) {
+		roleUser := helpers.GetCurrentUserRole(c.Ctx)
+		userID := helpers.GetSessionUserID(c.Ctx)
 		listFolder := c.LeaderFolder.GetByRole(roleUser, userID)
 
 		return mvc.View {
@@ -70,7 +45,7 @@ func (c *FolderController) GetListfolder() mvc.Result  {
 }
 
 func (c *FolderController) GetMemberfolder() mvc.Result {
-	if c.isLoggedIn() {
+	if helpers.IsLoggedIn(c.Ctx) {
 		idLeader := c.Ctx.URLParam("leader_id")
 		idGroup := c.Ctx.URLParam("group_id")
 		id, err := strconv.ParseInt(idLeader, 10, 64)
@@ -114,7 +89,7 @@ func (c *FolderController) GetMemberfolder() mvc.Result {
 }
 
 func (c *FolderController) GetCreatefolder() mvc.Result {
-	if c.isLoggedIn() {
+	if helpers.IsLoggedIn(c.Ctx) {
 		msgLeader := c.Session.Get("ErrorsLeaderFolder")
 		msgMember := c.Session.Get("ErrorsMemberFolder")
 		groups := c.GroupService.GetAll()
@@ -145,7 +120,7 @@ func (c *FolderController) GetCreatefolder() mvc.Result {
 }
 
 func (c *FolderController) PostFolder() mvc.Result {
-	if c.isLoggedIn() {
+	if helpers.IsLoggedIn(c.Ctx) {
 		var (
 			leaderName = c.Ctx.FormValue("leaderName")
 			leaderEmail = c.Ctx.FormValue("leaderEmail")
@@ -190,7 +165,7 @@ func (c *FolderController) PostFolder() mvc.Result {
 			}
 		}
 
-		userID := c.getCurrentUserID()
+		userID := helpers.GetSessionUserID(c.Ctx)
 		groupID, _ := strconv.ParseInt(leaderGroup, 10, 64)
 
 		//insert database

@@ -17,7 +17,10 @@ import (
 
 func setSessionViewData(ctx iris.Context) {
 	session := sessions.Get(ctx)
-	ctx.ViewData("session", session)
+	username := session.GetStringDefault("usernameSession", "")
+	roleUser := session.GetInt64Default("roleSession", 0)
+	ctx.ViewData("username", username)
+	ctx.ViewData("roleUser", roleUser)
 	ctx.Next()
 }
 

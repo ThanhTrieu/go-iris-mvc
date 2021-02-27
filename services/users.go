@@ -12,7 +12,7 @@ type UsersService interface {
 	GetByEmail(email string) models.Users
 	CheckUsernameExists(username string) bool
 	CheckEmailExists(email string) bool
-	CheckLoginUser(username string, password string) (models.Users, bool)
+	CheckLoginUser(username string) (models.Users, bool)
 
 
 	CreateUser(username string, password string, email string, phone string, role int)  bool
@@ -36,11 +36,11 @@ func (s *usersService) GetByID(id int64) models.Users {
 	return s.repo.SelectById("select * from users where id=?", id)
 }
 
-func (s *usersService) CheckLoginUser(username string, password string) (models.Users, bool) {
-	if username == "" || password == "" {
+func (s *usersService) CheckLoginUser(username string) (models.Users, bool) {
+	if username == "" {
 		return models.Users{}, false
 	}
-	dataUser := s.repo.LoginUser("select * from users as u where u.username=? and u.password=? ", username, password)
+	dataUser := s.repo.LoginUser("select * from users as u where u.username=?", username)
 	if (models.Users{}) == dataUser {
 		return models.Users{}, false
 	}

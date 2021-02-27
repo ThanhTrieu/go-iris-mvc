@@ -2,15 +2,34 @@ package helpers
 
 import (
 	"crypto/md5"
+	"crypto/rand"
 	"encoding/hex"
+	"fmt"
 
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/sessions"
+	"golang.org/x/crypto/bcrypt"
 )
 
 func GetMD5Hash(text string) string {
 	hash := md5.Sum([]byte(text))
 	return hex.EncodeToString(hash[:])
+}
+
+func RandToken() string {
+	b := make([]byte, 8)
+	rand.Read(b)
+	return fmt.Sprintf("%x", b)
+}
+
+func HashPassword(password string) (string, error) {
+	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 14)
+	return string(bytes), err
+}
+
+func CheckPasswordHash(password, hash string) bool {
+	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
+	return err == nil
 }
 
 func  GetSessionUserID(ctx iris.Context) int64 {

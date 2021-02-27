@@ -51,24 +51,32 @@ func (c *UsersController) PostLogin() mvc.Result {
 		username = html.EscapeString(c.Ctx.FormValue("username"))
 		password = html.EscapeString(c.Ctx.FormValue("password"))
 	)
-	cryptPassword := helpers.GetMD5Hash(password)
-	u, check := c.Service.CheckLoginUser(username, cryptPassword)
+	u, check := c.Service.CheckLoginUser(username)
 
 	if check == false {
 		return mvc.Response{
 			Path: "/user/login?state=fail",
 		}
 	}
-	
-	c.Session.Set("idUserSession", int64(u.ID))
-	c.Session.Set("usernameSession", u.Username)
-	c.Session.Set("emailSession", u.Email)
-	c.Session.Set("authenSession", u.AuthenKey)
-	c.Session.Set("phoneSession", u.Phone)
-	c.Session.Set("roleSession", int64(u.Role))
 
+	// check crypto hash password
+	hashPass := u.Password
+	matchPassword := helpers.CheckPasswordHash(password, hashPass)
+
+	if matchPassword {
+		c.Session.Set("idUserSession", int64(u.ID))
+		c.Session.Set("usernameSession", u.Username)
+		c.Session.Set("emailSession", u.Email)
+		c.Session.Set("authenSession", u.AuthenKey)
+		c.Session.Set("phoneSession", u.Phone)
+		c.Session.Set("roleSession", int64(u.Role))
+
+		return mvc.Response{
+			Path: "/admin/dashboard",
+		}
+	}
 	return mvc.Response{
-		Path: "/admin/dashboard",
+		Path: "/user/login?state=fail",
 	}
 }
 
@@ -140,8 +148,8 @@ func (c *UsersController) PostRegister() mvc.Result {
 	}
 
 	c.Session.Destroy()
-	// crypt password md5
-	cryptPassword := helpers.GetMD5Hash(password)
+	// crypt hash password md5
+	cryptPassword,_ := helpers.HashPassword(password)
 	insert := c.Service.CreateUser(username, cryptPassword, email, phone, roleUser)
 	if insert == false {
 		return mvc.Response {

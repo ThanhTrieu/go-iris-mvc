@@ -40,7 +40,7 @@ func (s *usersService) CheckLoginUser(username string) (models.Users, bool) {
 	if username == "" {
 		return models.Users{}, false
 	}
-	dataUser := s.repo.LoginUser("select * from users as u where u.username=?", username)
+	dataUser := s.repo.LoginUser("select * from users as u where u.username=? or u.email=?", username, username)
 	if (models.Users{}) == dataUser {
 		return models.Users{}, false
 	}

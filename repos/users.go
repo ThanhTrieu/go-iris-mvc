@@ -11,7 +11,7 @@ type UserRepository interface {
 	SelectById(query string, id int64) models.Users
 	SelectByName(query string, name string) models.Users
 	SelectByEmail(query string, email string) models.Users
-	LoginUser(query string, username string) models.Users
+	LoginUser(query string, username string, email string) models.Users
 	CreateAccount(query string, username string, password string, email string, phone string, role int) bool
 }
 
@@ -35,9 +35,9 @@ func (m *userMysqlRepository) SelectById(query string, id int64) models.Users {
 	return result
 }
 
-func (m *userMysqlRepository) LoginUser(query string, username string) models.Users {
+func (m *userMysqlRepository) LoginUser(query string, username string, email string) models.Users {
 	result := models.Users{}
-	m.DB.Raw(query, username).Scan(&result)
+	m.DB.Raw(query, username, email).Scan(&result)
 	return result
 }
 

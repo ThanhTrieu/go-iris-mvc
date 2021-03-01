@@ -148,7 +148,7 @@ func (c *UsersController) PostRegister() mvc.Result {
 	}
 
 	c.Session.Destroy()
-	// crypt hash password md5
+	// crypt hash password
 	cryptPassword,_ := helpers.HashPassword(password)
 	insert := c.Service.CreateUser(username, cryptPassword, email, phone, roleUser)
 	if insert == false {

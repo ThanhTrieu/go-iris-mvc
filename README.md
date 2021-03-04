@@ -7,4 +7,4 @@ Real World Example
 # go init name_project
 
 # go get -u github.com/kataras/rizla
-run : rizla main.go
+# run : rizla main.go
